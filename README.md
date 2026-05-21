@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: autenticação inicial com Laravel Breeze instalada, banco MySQL local configurado e layout base do Finance App customizado.
+Etapa atual: dominio financeiro inicial modelado com contas, categorias e lancamentos financeiros.
 
 ## Ja Implementado
 
@@ -85,16 +85,21 @@ Etapa atual: autenticação inicial com Laravel Breeze instalada, banco MySQL lo
 - Migrations iniciais executadas
 - Autenticacao web com Laravel Breeze e Blade
 - Telas iniciais de entrada, login, cadastro, painel e perfil
+- Models `Account`, `Category` e `FinancialTransaction`
+- Enum `TransactionType` para receitas e despesas
+- Migrations financeiras com relacionamentos, indices e valores monetarios em `decimal`
+- Factories para entidades financeiras
+- Testes de dominio financeiro
 - Build frontend com Vite e Tailwind CSS
 - Testes automatizados iniciais passando
 
 ## Proximas Etapas
 
-1. Modelar contas bancarias.
-2. Modelar categorias financeiras.
-3. Modelar lancamentos financeiros.
-4. Criar migrations com relacionamentos e indices.
-5. Implementar CRUD inicial de contas.
+1. Implementar CRUD inicial de contas.
+2. Criar Form Requests para validacao de contas.
+3. Proteger consultas por usuario autenticado.
+4. Criar views Blade para listagem, criacao e edicao de contas.
+5. Cobrir fluxo de contas com testes Feature.
 
 ## Licenca
 
