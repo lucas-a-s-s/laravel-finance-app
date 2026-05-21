@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: dominio financeiro inicial modelado com contas, categorias e lancamentos financeiros.
+Etapa atual: CRUD inicial de contas implementado com Blade, validação e testes.
 
 ## Ja Implementado
 
@@ -90,16 +90,20 @@ Etapa atual: dominio financeiro inicial modelado com contas, categorias e lancam
 - Migrations financeiras com relacionamentos, indices e valores monetarios em `decimal`
 - Factories para entidades financeiras
 - Testes de dominio financeiro
+- CRUD web inicial de contas
+- Form Requests para validacao de contas
+- Protecao de contas por usuario autenticado
+- Desativacao de contas sem exclusao fisica
 - Build frontend com Vite e Tailwind CSS
 - Testes automatizados iniciais passando
 
 ## Proximas Etapas
 
-1. Implementar CRUD inicial de contas.
-2. Criar Form Requests para validacao de contas.
-3. Proteger consultas por usuario autenticado.
-4. Criar views Blade para listagem, criacao e edicao de contas.
-5. Cobrir fluxo de contas com testes Feature.
+1. Implementar CRUD inicial de categorias.
+2. Criar validacao por tipo de categoria.
+3. Proteger categorias por usuario autenticado.
+4. Criar views Blade para listagem, criacao e edicao de categorias.
+5. Preparar categorias para uso em lancamentos financeiros.
 
 ## Licenca
 

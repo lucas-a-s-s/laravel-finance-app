@@ -40,4 +40,10 @@ O tipo de categoria e de lancamento usa o enum `TransactionType`, com os valores
 
 ## 8. Evolucao incremental
 
-As entidades financeiras foram modeladas, mas ainda nao existe CRUD. A proxima etapa deve implementar o CRUD de contas bancarias com validacao, autorizacao basica por usuario autenticado e testes de fluxo.
+O CRUD inicial de contas foi implementado antes de categorias e lancamentos porque contas sao a base do controle de saldo.
+
+As validacoes ficam em `StoreAccountRequest` e `UpdateAccountRequest`, mantendo controllers focados no fluxo HTTP. As consultas e alteracoes sao sempre filtradas pelo usuario autenticado, evitando acesso cruzado entre usuarios.
+
+Contas sao desativadas em vez de excluidas fisicamente. Essa decisao preserva historico financeiro para quando os lancamentos forem implementados.
+
+A proxima etapa deve implementar categorias, mantendo o mesmo padrao de Form Requests, isolamento por usuario e testes Feature.
