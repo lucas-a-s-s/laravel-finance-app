@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: cancelamento de lancamentos com historico preservado e reversao de saldo.
+Etapa atual: filtros iniciais da listagem de lancamentos financeiros.
 
 ## Ja Implementado
 
@@ -108,16 +108,17 @@ Etapa atual: cancelamento de lancamentos com historico preservado e reversao de 
 - Reconciliacao de saldo ao alterar valor, conta, tipo ou status pago do lancamento
 - Cancelamento de lancamentos sem exclusao fisica do historico
 - Reversao de saldo ao cancelar lancamentos pagos
+- Filtros de lancamentos por periodo, tipo, conta, categoria e status
 - Build frontend com Vite e Tailwind CSS
 - Testes automatizados iniciais passando
 
 ## Proximas Etapas
 
-1. Criar filtros iniciais por periodo, tipo, conta e categoria.
-2. Melhorar selecao de categorias no formulario conforme o tipo escolhido.
-3. Evoluir dashboard com dados reais do dominio financeiro.
-4. Avaliar extrato de saldo e auditoria de alteracoes financeiras.
-5. Definir se lancamentos cancelados poderao ser reabertos em etapa futura.
+1. Melhorar selecao de categorias no formulario conforme o tipo escolhido.
+2. Evoluir dashboard com dados reais do dominio financeiro.
+3. Avaliar extrato de saldo e auditoria de alteracoes financeiras.
+4. Definir se lancamentos cancelados poderao ser reabertos em etapa futura.
+5. Preparar a primeira camada da API REST com autenticacao adequada.
 
 ## Licenca
 

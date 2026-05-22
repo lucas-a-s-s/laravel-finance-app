@@ -83,3 +83,13 @@ Nesta fase, lancamentos financeiros nao sao excluidos fisicamente nem usam exclu
 Lancamentos cancelados continuam na listagem com status proprio, deixam de compor totais pagos e nao podem mais ser editados. Essa regra reduz risco de reintroduzir impacto financeiro sem uma operacao explicita de reabertura ou estorno.
 
 O proximo passo pode criar filtros por periodo, tipo, conta e categoria para melhorar leitura operacional da listagem antes de evoluir relatorios e dashboard.
+
+## 13. Filtros iniciais da listagem de lancamentos
+
+`FilterFinancialTransactionsRequest` valida os parametros de consulta da listagem. Contas e categorias usadas no filtro precisam pertencer ao usuario autenticado, evitando que IDs externos sejam aceitos mesmo em uma operacao somente de leitura.
+
+O controller reaproveita a mesma query filtrada para paginacao e totais pagos. Assim, o resumo de receitas e despesas acompanha o recorte visivel por periodo, tipo, conta, categoria e status.
+
+Os filtros permanecem na URL via requisicao `GET` e a paginacao preserva a query string. Essa escolha facilita compartilhar recortes de leitura e prepara a listagem para evoluir para relatorios sem introduzir estado de sessao para filtros.
+
+O proximo passo pode melhorar a selecao de categorias no formulario de lancamentos para reduzir combinacoes invalidas entre tipo financeiro e categoria.

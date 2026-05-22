@@ -43,6 +43,94 @@
                 </div>
             </section>
 
+            <section class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-gray-200">
+                <form method="GET" action="{{ route('financial-transactions.index') }}" class="grid gap-4 lg:grid-cols-6">
+                    <div>
+                        <x-input-label for="date_from" :value="__('De')" />
+                        <x-text-input id="date_from" name="date_from" type="date" class="mt-1 block w-full" :value="$filters['date_from'] ?? ''" />
+                        <x-input-error class="mt-2" :messages="$errors->get('date_from')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="date_to" :value="__('Ate')" />
+                        <x-text-input id="date_to" name="date_to" type="date" class="mt-1 block w-full" :value="$filters['date_to'] ?? ''" />
+                        <x-input-error class="mt-2" :messages="$errors->get('date_to')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="type" :value="__('Tipo')" />
+                        <select id="type" name="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            <option value="">Todos</option>
+
+                            @foreach ($transactionTypes as $value => $label)
+                                <option value="{{ $value }}" @selected(($filters['type'] ?? null) === $value)>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error class="mt-2" :messages="$errors->get('type')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="status" :value="__('Status')" />
+                        <select id="status" name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            <option value="">Todos</option>
+
+                            @foreach ($transactionStatuses as $value => $label)
+                                <option value="{{ $value }}" @selected(($filters['status'] ?? null) === $value)>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error class="mt-2" :messages="$errors->get('status')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="account_id" :value="__('Conta')" />
+                        <select id="account_id" name="account_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            <option value="">Todas</option>
+
+                            @foreach ($filterAccounts as $account)
+                                <option value="{{ $account->id }}" @selected((string) ($filters['account_id'] ?? '') === (string) $account->id)>
+                                    {{ $account->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error class="mt-2" :messages="$errors->get('account_id')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="category_id" :value="__('Categoria')" />
+                        <select id="category_id" name="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            <option value="">Todas</option>
+
+                            @foreach ($transactionTypes as $typeValue => $typeLabel)
+                                <optgroup label="{{ $typeLabel }}">
+                                    @foreach ($filterCategories as $category)
+                                        @if ($category->type->value === $typeValue)
+                                            <option value="{{ $category->id }}" @selected((string) ($filters['category_id'] ?? '') === (string) $category->id)>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+                        </select>
+                        <x-input-error class="mt-2" :messages="$errors->get('category_id')" />
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-end gap-3 lg:col-span-6">
+                        <a href="{{ route('financial-transactions.index') }}" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
+                            Limpar
+                        </a>
+
+                        <x-primary-button>
+                            Filtrar
+                        </x-primary-button>
+                    </div>
+                </form>
+            </section>
+
             <section class="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-200">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
