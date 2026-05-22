@@ -1,11 +1,15 @@
 @csrf
 
+@isset($method)
+    @method($method)
+@endisset
+
 <div class="grid gap-6 md:grid-cols-2">
     <div>
         <x-input-label for="type" :value="__('Tipo')" />
         <select id="type" name="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
             @foreach ($transactionTypes as $value => $label)
-                <option value="{{ $value }}" @selected(old('type', 'expense') === $value)>
+                <option value="{{ $value }}" @selected(old('type', $transaction?->type?->value ?? 'expense') === $value)>
                     {{ $label }}
                 </option>
             @endforeach
@@ -15,7 +19,7 @@
 
     <div>
         <x-input-label for="transaction_date" :value="__('Data')" />
-        <x-text-input id="transaction_date" name="transaction_date" type="date" class="mt-1 block w-full" :value="old('transaction_date', now()->toDateString())" required />
+        <x-text-input id="transaction_date" name="transaction_date" type="date" class="mt-1 block w-full" :value="old('transaction_date', $transaction?->transaction_date?->toDateString() ?? now()->toDateString())" required />
         <x-input-error class="mt-2" :messages="$errors->get('transaction_date')" />
     </div>
 
@@ -25,7 +29,7 @@
             <option value="">Selecione uma conta</option>
 
             @foreach ($accounts as $account)
-                <option value="{{ $account->id }}" @selected((string) old('account_id') === (string) $account->id)>
+                <option value="{{ $account->id }}" @selected((string) old('account_id', $transaction?->account_id) === (string) $account->id)>
                     {{ $account->name }} - {{ $account->currency }} {{ number_format((float) $account->current_balance, 2, ',', '.') }}
                 </option>
             @endforeach
@@ -42,7 +46,7 @@
                 <optgroup label="{{ $typeLabel }}">
                     @foreach ($categories as $category)
                         @if ($category->type->value === $typeValue)
-                            <option value="{{ $category->id }}" @selected((string) old('category_id') === (string) $category->id)>
+                            <option value="{{ $category->id }}" @selected((string) old('category_id', $transaction?->category_id) === (string) $category->id)>
                                 {{ $category->name }}
                             </option>
                         @endif
@@ -55,26 +59,26 @@
 
     <div>
         <x-input-label for="amount" :value="__('Valor')" />
-        <x-text-input id="amount" name="amount" type="number" min="0.01" step="0.01" class="mt-1 block w-full" :value="old('amount')" required />
+        <x-text-input id="amount" name="amount" type="number" min="0.01" step="0.01" class="mt-1 block w-full" :value="old('amount', $transaction?->amount)" required />
         <x-input-error class="mt-2" :messages="$errors->get('amount')" />
     </div>
 
     <div>
         <x-input-label for="description" :value="__('Descricao')" />
-        <x-text-input id="description" name="description" type="text" class="mt-1 block w-full" :value="old('description')" />
+        <x-text-input id="description" name="description" type="text" class="mt-1 block w-full" :value="old('description', $transaction?->description)" />
         <x-input-error class="mt-2" :messages="$errors->get('description')" />
     </div>
 
     <div class="md:col-span-2">
         <x-input-label for="notes" :value="__('Observacoes')" />
-        <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">{{ old('notes') }}</textarea>
+        <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">{{ old('notes', $transaction?->notes) }}</textarea>
         <x-input-error class="mt-2" :messages="$errors->get('notes')" />
     </div>
 
     <div class="md:col-span-2">
         <input type="hidden" name="is_paid" value="0">
         <label for="is_paid" class="inline-flex items-center">
-            <input id="is_paid" type="checkbox" name="is_paid" value="1" @checked((bool) old('is_paid', true)) class="rounded border-gray-300 text-emerald-600 shadow-sm focus:ring-emerald-500">
+            <input id="is_paid" type="checkbox" name="is_paid" value="1" @checked((bool) old('is_paid', $transaction?->is_paid ?? true)) class="rounded border-gray-300 text-emerald-600 shadow-sm focus:ring-emerald-500">
             <span class="ms-2 text-sm text-gray-700">Lancamento pago</span>
         </label>
         <x-input-error class="mt-2" :messages="$errors->get('is_paid')" />

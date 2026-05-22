@@ -19,6 +19,7 @@
             <section class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-200">
                 <form method="POST" action="{{ route('financial-transactions.store') }}">
                     @include('financial-transactions.partials.form', [
+                        'transaction' => null,
                         'submitLabel' => 'Cadastrar lancamento',
                     ])
                 </form>

@@ -2,13 +2,16 @@
 
 namespace App\Actions\FinancialTransactions;
 
-use App\Enums\TransactionType;
 use App\Models\FinancialTransaction;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class CreateFinancialTransaction
 {
+    public function __construct(
+        private readonly AdjustAccountBalanceForTransaction $adjustAccountBalance,
+    ) {}
+
     /**
      * @param  array<string, mixed>  $attributes
      */
@@ -33,15 +36,7 @@ class CreateFinancialTransaction
                 'category_id' => $category->getKey(),
             ]);
 
-            if (! $transaction->is_paid) {
-                return $transaction;
-            }
-
-            if ($transaction->type === TransactionType::Income) {
-                $account->increment('current_balance', $transaction->amount);
-            } else {
-                $account->decrement('current_balance', $transaction->amount);
-            }
+            $this->adjustAccountBalance->apply($account, $transaction);
 
             return $transaction;
         });

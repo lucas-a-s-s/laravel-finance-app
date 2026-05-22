@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: cadastro e listagem inicial de lancamentos financeiros com atualizacao de saldo no registro.
+Etapa atual: edicao inicial de lancamentos financeiros com reconciliacao segura do saldo.
 
 ## Ja Implementado
 
@@ -104,16 +104,18 @@ Etapa atual: cadastro e listagem inicial de lancamentos financeiros com atualiza
 - Validacao de compatibilidade entre tipo do lancamento e tipo da categoria
 - Acao de dominio para criar lancamento e atualizar saldo da conta
 - Lancamentos pendentes sem impacto imediato no saldo
+- Edicao de lancamentos com reversao do saldo anterior antes de aplicar o novo estado
+- Reconciliacao de saldo ao alterar valor, conta, tipo ou status pago do lancamento
 - Build frontend com Vite e Tailwind CSS
 - Testes automatizados iniciais passando
 
 ## Proximas Etapas
 
-1. Implementar edicao de lancamentos com reversao do efeito anterior no saldo.
-2. Definir estrategia segura para cancelamento ou exclusao de lancamentos.
-3. Criar filtros iniciais por periodo, tipo, conta e categoria.
-4. Melhorar selecao de categorias no formulario conforme o tipo escolhido.
-5. Evoluir dashboard com dados reais do dominio financeiro.
+1. Definir estrategia segura para cancelamento ou exclusao de lancamentos.
+2. Criar filtros iniciais por periodo, tipo, conta e categoria.
+3. Melhorar selecao de categorias no formulario conforme o tipo escolhido.
+4. Evoluir dashboard com dados reais do dominio financeiro.
+5. Avaliar extrato de saldo e auditoria de alteracoes financeiras.
 
 ## Licenca
 

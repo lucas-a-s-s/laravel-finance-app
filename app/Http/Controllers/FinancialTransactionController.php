@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Actions\FinancialTransactions\CreateFinancialTransaction;
+use App\Actions\FinancialTransactions\UpdateFinancialTransaction;
 use App\Enums\TransactionType;
 use App\Http\Requests\StoreFinancialTransactionRequest;
+use App\Http\Requests\UpdateFinancialTransactionRequest;
+use App\Models\FinancialTransaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -30,11 +33,7 @@ class FinancialTransactionController extends Controller
 
     public function create(Request $request): View
     {
-        return view('financial-transactions.create', [
-            'accounts' => $request->user()->accounts()->where('is_active', true)->orderBy('name')->get(),
-            'categories' => $request->user()->categories()->where('is_active', true)->orderBy('name')->get(),
-            'transactionTypes' => $this->transactionTypes(),
-        ]);
+        return view('financial-transactions.create', $this->transactionFormOptions($request));
     }
 
     public function store(
@@ -46,6 +45,28 @@ class FinancialTransactionController extends Controller
         return to_route('financial-transactions.index')->with('status', 'Lancamento cadastrado com sucesso.');
     }
 
+    public function edit(Request $request, FinancialTransaction $financialTransaction): View
+    {
+        $financialTransaction = $this->transactionFromAuthenticatedUser($request, $financialTransaction);
+
+        return view('financial-transactions.edit', [
+            'transaction' => $financialTransaction,
+            ...$this->transactionFormOptions($request, $financialTransaction),
+        ]);
+    }
+
+    public function update(
+        UpdateFinancialTransactionRequest $request,
+        FinancialTransaction $financialTransaction,
+        UpdateFinancialTransaction $updateFinancialTransaction,
+    ): RedirectResponse {
+        $financialTransaction = $this->transactionFromAuthenticatedUser($request, $financialTransaction);
+
+        $updateFinancialTransaction->handle($request->user(), $financialTransaction, $request->validated());
+
+        return to_route('financial-transactions.index')->with('status', 'Lancamento atualizado com sucesso.');
+    }
+
     private function paidTypeTotal(Request $request, TransactionType $type): string
     {
         return (string) $request->user()
@@ -53,6 +74,51 @@ class FinancialTransactionController extends Controller
             ->where('type', $type->value)
             ->where('is_paid', true)
             ->sum('amount');
+    }
+
+    private function transactionFromAuthenticatedUser(
+        Request $request,
+        FinancialTransaction $financialTransaction,
+    ): FinancialTransaction {
+        abort_unless($financialTransaction->user_id === $request->user()->id, 404);
+
+        return $financialTransaction;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function transactionFormOptions(
+        Request $request,
+        ?FinancialTransaction $financialTransaction = null,
+    ): array {
+        return [
+            'accounts' => $request->user()
+                ->accounts()
+                ->where(function ($query) use ($financialTransaction) {
+                    $query->where('is_active', true);
+
+                    if ($financialTransaction !== null) {
+                        $query->orWhere('id', $financialTransaction->account_id);
+                    }
+                })
+                ->orderByDesc('is_active')
+                ->orderBy('name')
+                ->get(),
+            'categories' => $request->user()
+                ->categories()
+                ->where(function ($query) use ($financialTransaction) {
+                    $query->where('is_active', true);
+
+                    if ($financialTransaction !== null) {
+                        $query->orWhere('id', $financialTransaction->category_id);
+                    }
+                })
+                ->orderByDesc('is_active')
+                ->orderBy('name')
+                ->get(),
+            'transactionTypes' => $this->transactionTypes(),
+        ];
     }
 
     /**

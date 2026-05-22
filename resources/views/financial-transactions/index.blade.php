@@ -54,6 +54,7 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-500">Categoria</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-500">Status</th>
                                 <th scope="col" class="px-6 py-3 text-right text-xs font-semibold uppercase text-gray-500">Valor</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold uppercase text-gray-500">Acoes</th>
                             </tr>
                         </thead>
 
@@ -87,10 +88,15 @@
                                         {{ $transaction->type->value === 'income' ? '+' : '-' }}
                                         R$ {{ number_format((float) $transaction->amount, 2, ',', '.') }}
                                     </td>
+                                    <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
+                                        <a href="{{ route('financial-transactions.edit', $transaction) }}" class="font-semibold text-emerald-700 transition hover:text-emerald-900">
+                                            Editar
+                                        </a>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-10 text-center text-sm text-gray-500">
+                                    <td colspan="7" class="px-6 py-10 text-center text-sm text-gray-500">
                                         Nenhum lancamento cadastrado.
                                     </td>
                                 </tr>

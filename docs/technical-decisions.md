@@ -63,3 +63,13 @@ O primeiro fluxo de lancamentos implementa listagem e cadastro antes de edicao e
 `CreateFinancialTransaction` concentra a criacao do lancamento e a atualizacao de saldo dentro de uma transacao de banco. A conta e travada com `lockForUpdate`, receitas pagas incrementam saldo, despesas pagas decrementam saldo e lancamentos pendentes nao alteram saldo imediato.
 
 `StoreFinancialTransactionRequest` valida que conta e categoria pertencem ao usuario autenticado, estao ativas e que o tipo da categoria combina com o tipo do lancamento. O proximo passo deve manter essas garantias no fluxo de edicao e na estrategia de cancelamento ou exclusao.
+
+## 11. Edicao de lancamentos e reconciliacao de saldo
+
+Editar um lancamento pago altera um fato que ja impactou saldo. Por isso `UpdateFinancialTransaction` executa a operacao em transacao de banco: trava o lancamento, trava as contas envolvidas, reverte o efeito anterior e aplica o novo estado persistido.
+
+`AdjustAccountBalanceForTransaction` concentra a regra de aplicar e reverter impacto de receitas e despesas pagas. O cadastro e a edicao usam a mesma regra para reduzir divergencia entre fluxos que alteram saldo.
+
+`UpdateFinancialTransactionRequest` mantem validacao de posse, tipo e referencias ativas. Na edicao, a conta e a categoria ja associadas ao lancamento continuam disponiveis mesmo se tiverem sido desativadas depois, preservando manutencao controlada do historico financeiro.
+
+O proximo passo deve definir uma estrategia segura para cancelamento ou exclusao de lancamentos, evitando perder rastreabilidade ou deixar o saldo inconsistente.
