@@ -55,3 +55,11 @@ Categorias seguem o padrao de contas: `CategoryController` coordena o fluxo HTTP
 O nome e unico por usuario e tipo financeiro. Isso permite que um usuario tenha, por exemplo, uma categoria de despesa e outra de receita com o mesmo nome quando isso fizer sentido no dominio.
 
 Cor e icone entram no cadastro para preparar leitura visual do dashboard e dos lancamentos. A proxima etapa deve implementar lancamentos financeiros com validacao cruzada entre usuario, conta, categoria e tipo, alem de definir como o saldo de contas sera atualizado com consistencia.
+
+## 10. Cadastro inicial de lancamentos financeiros
+
+O primeiro fluxo de lancamentos implementa listagem e cadastro antes de edicao e exclusao. Essa escolha reduz risco, pois alterar um lancamento pago exige reverter seu efeito anterior no saldo antes de aplicar o novo estado.
+
+`CreateFinancialTransaction` concentra a criacao do lancamento e a atualizacao de saldo dentro de uma transacao de banco. A conta e travada com `lockForUpdate`, receitas pagas incrementam saldo, despesas pagas decrementam saldo e lancamentos pendentes nao alteram saldo imediato.
+
+`StoreFinancialTransactionRequest` valida que conta e categoria pertencem ao usuario autenticado, estao ativas e que o tipo da categoria combina com o tipo do lancamento. O proximo passo deve manter essas garantias no fluxo de edicao e na estrategia de cancelamento ou exclusao.

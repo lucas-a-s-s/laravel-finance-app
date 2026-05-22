@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: CRUD inicial de categorias implementado com Blade, validação e testes.
+Etapa atual: cadastro e listagem inicial de lancamentos financeiros com atualizacao de saldo no registro.
 
 ## Ja Implementado
 
@@ -99,16 +99,21 @@ Etapa atual: CRUD inicial de categorias implementado com Blade, validação e te
 - Protecao de categorias por usuario autenticado
 - Controle visual de cor e icone de categorias
 - Desativacao de categorias sem exclusao fisica
+- Cadastro e listagem web inicial de lancamentos financeiros
+- Validacao de conta e categoria por usuario autenticado
+- Validacao de compatibilidade entre tipo do lancamento e tipo da categoria
+- Acao de dominio para criar lancamento e atualizar saldo da conta
+- Lancamentos pendentes sem impacto imediato no saldo
 - Build frontend com Vite e Tailwind CSS
 - Testes automatizados iniciais passando
 
 ## Proximas Etapas
 
-1. Implementar CRUD inicial de lancamentos financeiros.
-2. Validar conta, categoria e tipo do lancamento por usuario autenticado.
-3. Atualizar saldo da conta com consistencia ao criar, editar ou cancelar lancamentos.
-4. Criar filtros iniciais por periodo e tipo.
-5. Cobrir fluxo de lancamentos com testes Feature.
+1. Implementar edicao de lancamentos com reversao do efeito anterior no saldo.
+2. Definir estrategia segura para cancelamento ou exclusao de lancamentos.
+3. Criar filtros iniciais por periodo, tipo, conta e categoria.
+4. Melhorar selecao de categorias no formulario conforme o tipo escolhido.
+5. Evoluir dashboard com dados reais do dominio financeiro.
 
 ## Licenca
 
