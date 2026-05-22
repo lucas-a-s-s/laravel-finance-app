@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: CRUD inicial de contas implementado com Blade, validação e testes.
+Etapa atual: CRUD inicial de categorias implementado com Blade, validação e testes.
 
 ## Ja Implementado
 
@@ -94,16 +94,21 @@ Etapa atual: CRUD inicial de contas implementado com Blade, validação e testes
 - Form Requests para validacao de contas
 - Protecao de contas por usuario autenticado
 - Desativacao de contas sem exclusao fisica
+- CRUD web inicial de categorias
+- Validacao de categorias por tipo financeiro
+- Protecao de categorias por usuario autenticado
+- Controle visual de cor e icone de categorias
+- Desativacao de categorias sem exclusao fisica
 - Build frontend com Vite e Tailwind CSS
 - Testes automatizados iniciais passando
 
 ## Proximas Etapas
 
-1. Implementar CRUD inicial de categorias.
-2. Criar validacao por tipo de categoria.
-3. Proteger categorias por usuario autenticado.
-4. Criar views Blade para listagem, criacao e edicao de categorias.
-5. Preparar categorias para uso em lancamentos financeiros.
+1. Implementar CRUD inicial de lancamentos financeiros.
+2. Validar conta, categoria e tipo do lancamento por usuario autenticado.
+3. Atualizar saldo da conta com consistencia ao criar, editar ou cancelar lancamentos.
+4. Criar filtros iniciais por periodo e tipo.
+5. Cobrir fluxo de lancamentos com testes Feature.
 
 ## Licenca
 

@@ -47,3 +47,11 @@ As validacoes ficam em `StoreAccountRequest` e `UpdateAccountRequest`, mantendo 
 Contas sao desativadas em vez de excluidas fisicamente. Essa decisao preserva historico financeiro para quando os lancamentos forem implementados.
 
 A proxima etapa deve implementar categorias, mantendo o mesmo padrao de Form Requests, isolamento por usuario e testes Feature.
+
+## 9. CRUD inicial de categorias
+
+Categorias seguem o padrao de contas: `CategoryController` coordena o fluxo HTTP e `StoreCategoryRequest` e `UpdateCategoryRequest` centralizam validacao.
+
+O nome e unico por usuario e tipo financeiro. Isso permite que um usuario tenha, por exemplo, uma categoria de despesa e outra de receita com o mesmo nome quando isso fizer sentido no dominio.
+
+Cor e icone entram no cadastro para preparar leitura visual do dashboard e dos lancamentos. A proxima etapa deve implementar lancamentos financeiros com validacao cruzada entre usuario, conta, categoria e tipo, alem de definir como o saldo de contas sera atualizado com consistencia.
