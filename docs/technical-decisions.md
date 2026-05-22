@@ -73,3 +73,13 @@ Editar um lancamento pago altera um fato que ja impactou saldo. Por isso `Update
 `UpdateFinancialTransactionRequest` mantem validacao de posse, tipo e referencias ativas. Na edicao, a conta e a categoria ja associadas ao lancamento continuam disponiveis mesmo se tiverem sido desativadas depois, preservando manutencao controlada do historico financeiro.
 
 O proximo passo deve definir uma estrategia segura para cancelamento ou exclusao de lancamentos, evitando perder rastreabilidade ou deixar o saldo inconsistente.
+
+## 12. Cancelamento explicito de lancamentos
+
+Nesta fase, lancamentos financeiros nao sao excluidos fisicamente nem usam exclusao silenciosa. O sistema registra `cancelled_at` para preservar historico visivel e deixar claro que o fato financeiro foi cancelado.
+
+`CancelFinancialTransaction` executa o cancelamento em transacao de banco, trava o lancamento e a conta associada, reverte o impacto anterior no saldo quando o lancamento estava pago e grava o instante do cancelamento. A acao e idempotente: cancelar o mesmo lancamento novamente nao reverte saldo duas vezes.
+
+Lancamentos cancelados continuam na listagem com status proprio, deixam de compor totais pagos e nao podem mais ser editados. Essa regra reduz risco de reintroduzir impacto financeiro sem uma operacao explicita de reabertura ou estorno.
+
+O proximo passo pode criar filtros por periodo, tipo, conta e categoria para melhorar leitura operacional da listagem antes de evoluir relatorios e dashboard.

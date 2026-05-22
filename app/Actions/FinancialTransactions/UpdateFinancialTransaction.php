@@ -22,6 +22,7 @@ class UpdateFinancialTransaction
         return DB::transaction(function () use ($user, $transaction, $attributes) {
             $transaction = $user->financialTransactions()
                 ->whereKey($transaction->getKey())
+                ->whereNull('cancelled_at')
                 ->lockForUpdate()
                 ->firstOrFail();
 

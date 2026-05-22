@@ -74,24 +74,45 @@
                                     <td class="whitespace-nowrap px-6 py-4 text-sm">
                                         <span @class([
                                             'rounded-md px-2 py-1 text-xs font-semibold',
-                                            'bg-emerald-50 text-emerald-700' => $transaction->is_paid,
-                                            'bg-amber-50 text-amber-700' => ! $transaction->is_paid,
+                                            'bg-gray-100 text-gray-600' => $transaction->isCancelled(),
+                                            'bg-emerald-50 text-emerald-700' => ! $transaction->isCancelled() && $transaction->is_paid,
+                                            'bg-amber-50 text-amber-700' => ! $transaction->isCancelled() && ! $transaction->is_paid,
                                         ])>
-                                            {{ $transaction->is_paid ? 'Pago' : 'Pendente' }}
+                                            @if ($transaction->isCancelled())
+                                                Cancelado
+                                            @else
+                                                {{ $transaction->is_paid ? 'Pago' : 'Pendente' }}
+                                            @endif
                                         </span>
                                     </td>
                                     <td @class([
                                         'whitespace-nowrap px-6 py-4 text-right text-sm font-semibold',
-                                        'text-emerald-700' => $transaction->type->value === 'income',
-                                        'text-rose-700' => $transaction->type->value === 'expense',
+                                        'text-gray-500' => $transaction->isCancelled(),
+                                        'text-emerald-700' => ! $transaction->isCancelled() && $transaction->type->value === 'income',
+                                        'text-rose-700' => ! $transaction->isCancelled() && $transaction->type->value === 'expense',
                                     ])>
                                         {{ $transaction->type->value === 'income' ? '+' : '-' }}
                                         R$ {{ number_format((float) $transaction->amount, 2, ',', '.') }}
                                     </td>
-                                    <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
-                                        <a href="{{ route('financial-transactions.edit', $transaction) }}" class="font-semibold text-emerald-700 transition hover:text-emerald-900">
-                                            Editar
-                                        </a>
+                                    <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                                        @if ($transaction->isCancelled())
+                                            <span class="text-gray-500">Sem acoes</span>
+                                        @else
+                                            <div class="flex justify-end gap-3">
+                                                <a href="{{ route('financial-transactions.edit', $transaction) }}" class="text-emerald-700 transition hover:text-emerald-900">
+                                                    Editar
+                                                </a>
+
+                                                <form method="POST" action="{{ route('financial-transactions.cancel', $transaction) }}">
+                                                    @csrf
+                                                    @method('PATCH')
+
+                                                    <button type="submit" class="text-rose-700 transition hover:text-rose-900">
+                                                        Cancelar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

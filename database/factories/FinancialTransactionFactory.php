@@ -35,6 +35,7 @@ class FinancialTransactionFactory extends Factory
             'transaction_date' => fake()->dateTimeBetween('-3 months', 'now'),
             'notes' => fake()->optional()->sentence(),
             'is_paid' => true,
+            'cancelled_at' => null,
         ];
     }
 
@@ -58,6 +59,13 @@ class FinancialTransactionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_paid' => false,
+        ]);
+    }
+
+    public function cancelled(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'cancelled_at' => now(),
         ]);
     }
 }

@@ -29,6 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('accounts', AccountController::class)->except(['show']);
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('financial-transactions', FinancialTransactionController::class)->only(['index', 'create', 'store', 'edit', 'update']);
+    Route::patch('financial-transactions/{financial_transaction}/cancel', [FinancialTransactionController::class, 'cancel'])
+        ->name('financial-transactions.cancel');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

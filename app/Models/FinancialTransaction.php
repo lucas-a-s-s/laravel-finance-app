@@ -21,6 +21,7 @@ class FinancialTransaction extends Model
         'transaction_date',
         'notes',
         'is_paid',
+        'cancelled_at',
     ];
 
     protected $casts = [
@@ -28,7 +29,13 @@ class FinancialTransaction extends Model
         'amount' => 'decimal:2',
         'transaction_date' => 'date',
         'is_paid' => 'boolean',
+        'cancelled_at' => 'datetime',
     ];
+
+    public function isCancelled(): bool
+    {
+        return $this->cancelled_at !== null;
+    }
 
     public function user(): BelongsTo
     {

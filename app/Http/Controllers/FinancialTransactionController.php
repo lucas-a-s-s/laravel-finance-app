@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\FinancialTransactions\CancelFinancialTransaction;
 use App\Actions\FinancialTransactions\CreateFinancialTransaction;
 use App\Actions\FinancialTransactions\UpdateFinancialTransaction;
 use App\Enums\TransactionType;
@@ -47,7 +48,7 @@ class FinancialTransactionController extends Controller
 
     public function edit(Request $request, FinancialTransaction $financialTransaction): View
     {
-        $financialTransaction = $this->transactionFromAuthenticatedUser($request, $financialTransaction);
+        $financialTransaction = $this->editableTransactionFromAuthenticatedUser($request, $financialTransaction);
 
         return view('financial-transactions.edit', [
             'transaction' => $financialTransaction,
@@ -60,11 +61,23 @@ class FinancialTransactionController extends Controller
         FinancialTransaction $financialTransaction,
         UpdateFinancialTransaction $updateFinancialTransaction,
     ): RedirectResponse {
-        $financialTransaction = $this->transactionFromAuthenticatedUser($request, $financialTransaction);
+        $financialTransaction = $this->editableTransactionFromAuthenticatedUser($request, $financialTransaction);
 
         $updateFinancialTransaction->handle($request->user(), $financialTransaction, $request->validated());
 
         return to_route('financial-transactions.index')->with('status', 'Lancamento atualizado com sucesso.');
+    }
+
+    public function cancel(
+        Request $request,
+        FinancialTransaction $financialTransaction,
+        CancelFinancialTransaction $cancelFinancialTransaction,
+    ): RedirectResponse {
+        $financialTransaction = $this->transactionFromAuthenticatedUser($request, $financialTransaction);
+
+        $cancelFinancialTransaction->handle($request->user(), $financialTransaction);
+
+        return to_route('financial-transactions.index')->with('status', 'Lancamento cancelado com sucesso.');
     }
 
     private function paidTypeTotal(Request $request, TransactionType $type): string
@@ -73,6 +86,7 @@ class FinancialTransactionController extends Controller
             ->financialTransactions()
             ->where('type', $type->value)
             ->where('is_paid', true)
+            ->whereNull('cancelled_at')
             ->sum('amount');
     }
 
@@ -81,6 +95,17 @@ class FinancialTransactionController extends Controller
         FinancialTransaction $financialTransaction,
     ): FinancialTransaction {
         abort_unless($financialTransaction->user_id === $request->user()->id, 404);
+
+        return $financialTransaction;
+    }
+
+    private function editableTransactionFromAuthenticatedUser(
+        Request $request,
+        FinancialTransaction $financialTransaction,
+    ): FinancialTransaction {
+        $financialTransaction = $this->transactionFromAuthenticatedUser($request, $financialTransaction);
+
+        abort_if($financialTransaction->isCancelled(), 404);
 
         return $financialTransaction;
     }

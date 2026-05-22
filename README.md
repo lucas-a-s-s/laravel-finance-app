@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: edicao inicial de lancamentos financeiros com reconciliacao segura do saldo.
+Etapa atual: cancelamento de lancamentos com historico preservado e reversao de saldo.
 
 ## Ja Implementado
 
@@ -106,16 +106,18 @@ Etapa atual: edicao inicial de lancamentos financeiros com reconciliacao segura 
 - Lancamentos pendentes sem impacto imediato no saldo
 - Edicao de lancamentos com reversao do saldo anterior antes de aplicar o novo estado
 - Reconciliacao de saldo ao alterar valor, conta, tipo ou status pago do lancamento
+- Cancelamento de lancamentos sem exclusao fisica do historico
+- Reversao de saldo ao cancelar lancamentos pagos
 - Build frontend com Vite e Tailwind CSS
 - Testes automatizados iniciais passando
 
 ## Proximas Etapas
 
-1. Definir estrategia segura para cancelamento ou exclusao de lancamentos.
-2. Criar filtros iniciais por periodo, tipo, conta e categoria.
-3. Melhorar selecao de categorias no formulario conforme o tipo escolhido.
-4. Evoluir dashboard com dados reais do dominio financeiro.
-5. Avaliar extrato de saldo e auditoria de alteracoes financeiras.
+1. Criar filtros iniciais por periodo, tipo, conta e categoria.
+2. Melhorar selecao de categorias no formulario conforme o tipo escolhido.
+3. Evoluir dashboard com dados reais do dominio financeiro.
+4. Avaliar extrato de saldo e auditoria de alteracoes financeiras.
+5. Definir se lancamentos cancelados poderao ser reabertos em etapa futura.
 
 ## Licenca
 
