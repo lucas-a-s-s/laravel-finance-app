@@ -137,3 +137,15 @@ Foi criado um `AccountStatementController` invocavel para manter o `AccountContr
 A rota `accounts/{account}/statement` exige autenticacao e valida que a conta pertence ao usuario logado antes de exibir qualquer dado. Os totais de entradas, saidas e resultado filtrado usam a mesma query base do extrato, garantindo que os cards acompanhem o periodo selecionado.
 
 Esta decisao entrega valor de produto sem criar uma estrutura de auditoria complexa antes da hora. A proxima evolucao natural e criar uma tabela propria de movimentos de conta, registrando operacoes de aplicacao, reversao e cancelamento de saldo com rastreabilidade mais forte.
+
+## 17. Auditoria inicial de movimentos de saldo
+
+Foi criada a tabela `account_balance_movements` para registrar cada alteracao real no saldo de uma conta. A tabela guarda usuario, conta, lancamento financeiro, operacao executada, tipo do lancamento, valor original, impacto assinado no saldo, saldo anterior e saldo posterior.
+
+O model `AccountBalanceMovement` representa essa trilha tecnica de auditoria. A operacao usa o enum `AccountBalanceMovementOperation`, com os valores `applied` e `reversed`, evitando strings soltas no codigo e deixando claro se o saldo foi aplicado ou revertido.
+
+A regra foi integrada em `AdjustAccountBalanceForTransaction`, que ja era o ponto unico de aplicacao e reversao de saldo. Assim, criacao, edicao e cancelamento continuam usando a mesma regra centralizada, e a auditoria nasce dentro da mesma transacao de banco que altera o saldo da conta.
+
+Lancamentos pendentes nao geram movimentos de saldo, pois ainda nao afetam o saldo atual. Lancamentos pagos geram movimento de aplicacao. Edicoes de lancamentos pagos podem gerar uma reversao do estado anterior e uma nova aplicacao. Cancelamentos geram uma reversao apenas uma vez, preservando a idempotencia ja existente.
+
+Essa etapa ainda nao cria uma tela propria de auditoria. A decisao foi primeiro garantir consistencia dos dados e cobertura automatizada. A proxima evolucao pode expor esses movimentos no extrato da conta ou em uma tela tecnica separada.

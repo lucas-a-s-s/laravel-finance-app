@@ -37,4 +37,9 @@ class Account extends Model
     {
         return $this->hasMany(FinancialTransaction::class);
     }
+
+    public function balanceMovements(): HasMany
+    {
+        return $this->hasMany(AccountBalanceMovement::class);
+    }
 }
