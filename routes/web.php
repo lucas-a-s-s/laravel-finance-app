@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AccountStatementController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FinancialTransactionController;
@@ -27,6 +28,8 @@ Route::get('/dashboard', DashboardController::class)
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('accounts/{account}/statement', AccountStatementController::class)
+        ->name('accounts.statement');
     Route::resource('accounts', AccountController::class)->except(['show']);
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('financial-transactions', FinancialTransactionController::class)->only(['index', 'create', 'store', 'edit', 'update']);

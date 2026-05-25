@@ -27,7 +27,7 @@ O Finance App tem como objetivo permitir que usuários acompanhem sua vida finan
 - API REST
 - Git e GitHub
 - Docker em etapa futura
-- PHPUnit em etapa futura
+- PHPUnit
 
 ## Arquitetura Inicial
 
@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: dashboard com dados reais do dominio financeiro.
+Etapa atual: extrato por conta com movimentos pagos.
 
 ## Ja Implementado
 
@@ -116,12 +116,17 @@ Etapa atual: dashboard com dados reais do dominio financeiro.
   - Contadores de contas, categorias e lancamentos
   - Resumo semanal dos ultimos 7 dias
   - Despesas por categoria com barras de progresso
+- Extrato por conta com:
+  - Movimentos pagos e nao cancelados
+  - Filtro por periodo
+  - Totais de entradas, saidas e resultado filtrado
+  - Isolamento por usuario autenticado
 - Build frontend com Vite e Tailwind CSS
-- 74 testes automatizados passando (235 assercoes)
+- 79 testes automatizados passando (259 assercoes)
 
 ## Proximas Etapas
 
-1. Avaliar extrato de saldo e auditoria de alteracoes financeiras.
+1. Evoluir auditoria de saldo com tabela propria de movimentos de conta.
 2. Definir se lancamentos cancelados poderao ser reabertos em etapa futura.
 3. Preparar a primeira camada da API REST com autenticacao adequada.
 

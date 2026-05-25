@@ -75,6 +75,8 @@
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                                         <div class="flex justify-end gap-3">
+                                            <a href="{{ route('accounts.statement', $account) }}" class="text-gray-700 transition hover:text-gray-900">Extrato</a>
+
                                             <a href="{{ route('accounts.edit', $account) }}" class="text-emerald-700 hover:text-emerald-900">Editar</a>
 
                                             @if ($account->is_active)

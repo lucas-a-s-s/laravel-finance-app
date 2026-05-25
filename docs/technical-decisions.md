@@ -127,3 +127,13 @@ Testes foram criados para validar:
 - Contagem de contas, categorias e lancamentos (excluindo cancelados)
 - Isolamento de dados entre usuarios
 - Estados vazios
+
+## 16. Extrato inicial por conta
+
+O extrato por conta foi implementado como uma tela de leitura baseada nos lancamentos financeiros ja existentes. Nesta primeira etapa, o extrato lista somente lancamentos pagos e nao cancelados, pois apenas eles representam movimentos que impactam o saldo atual da conta.
+
+Foi criado um `AccountStatementController` invocavel para manter o `AccountController` focado no CRUD de contas. A validacao de periodo fica em `FilterAccountStatementRequest`, mantendo a entrada HTTP separada da consulta de dominio e seguindo o mesmo padrao usado na listagem de lancamentos.
+
+A rota `accounts/{account}/statement` exige autenticacao e valida que a conta pertence ao usuario logado antes de exibir qualquer dado. Os totais de entradas, saidas e resultado filtrado usam a mesma query base do extrato, garantindo que os cards acompanhem o periodo selecionado.
+
+Esta decisao entrega valor de produto sem criar uma estrutura de auditoria complexa antes da hora. A proxima evolucao natural e criar uma tabela propria de movimentos de conta, registrando operacoes de aplicacao, reversao e cancelamento de saldo com rastreabilidade mais forte.
