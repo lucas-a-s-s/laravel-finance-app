@@ -93,3 +93,37 @@ O controller reaproveita a mesma query filtrada para paginacao e totais pagos. A
 Os filtros permanecem na URL via requisicao `GET` e a paginacao preserva a query string. Essa escolha facilita compartilhar recortes de leitura e prepara a listagem para evoluir para relatorios sem introduzir estado de sessao para filtros.
 
 O proximo passo pode melhorar a selecao de categorias no formulario de lancamentos para reduzir combinacoes invalidas entre tipo financeiro e categoria.
+
+## 14. Filtro dinamico de categorias no formulario de lancamentos
+
+O formulario de lancamentos agora filtra as categorias exibidas conforme o tipo financeiro escolhido (receita ou despesa). Essa melhoria de interface usa JavaScript simples (Vanilla JS) incluso diretamente na view do formulario.
+
+Quando o usuario alterna o tipo de lancamento, as opcoes de categorias incompativeis sao ocultadas e desabilitadas, evitando selecoes invalidas. Se uma categoria ja estiver selecionada e o tipo for alterado para um incompativel, a selecao e limpa automaticamente.
+
+A validacao backend continua existindo e e essencial: mesmo com o filtro visual, o `StoreFinancialTransactionRequest` e `UpdateFinancialTransactionRequest` validam que a categoria pertence ao usuario, esta ativa e combina com o tipo do lancamento. Essa defesa em profundidade garante integridade mesmo se JavaScript estiver desabilitado ou se requisicoes forem feitas diretamente via API.
+
+O script e contido em uma funcao anonima auto-executavel para evitar poluicao do escopo global e e executado tanto no carregamento da pagina (para edicao) quanto ao mudar o tipo. Essa abordagem incremental melhora a experiencia do usuario sem introduzir dependencias adicionais como Alpine.js ou frameworks frontend mais pesados, mantendo coerencia com a stack Blade + Vite + Tailwind.
+
+## 15. Dashboard com dados reais do dominio financeiro
+
+O dashboard foi evoluído de uma tela estática para uma view dinâmica que exibe dados reais do domínio financeiro do usuário. Foi criado um `DashboardController` dedicado que calcula e passa as seguintes informações para a view:
+
+- **Saldo total**: soma dos saldos de todas as contas ativas do usuário
+- **Receitas do mês**: total de receitas pagas e não canceladas no mês atual
+- **Despesas do mês**: total de despesas pagas e não canceladas no mês atual
+- **Contas ativas**: contador de contas ativas
+- **Categorias ativas**: contador de categorias ativas
+- **Lançamentos registrados**: total de lançamentos não cancelados
+- **Resumo semanal**: receitas e despesas dos últimos 7 dias, agrupadas por dia
+- **Despesas por categoria**: top 5 categorias de despesas do mês com porcentagem
+
+Todas as consultas são filtradas pelo usuário autenticado, garantindo isolamento de dados. Lançamentos cancelados são excluídos dos totais de receitas e despesas, assim como lançamentos pendentes. O resumo semanal sempre mostra os últimos 7 dias, mesmo que não haja movimentação.
+
+A view foi atualizada para exibir esses dados de forma clara, com formatação monetária adequada e barras de progresso para as despesas por categoria. Em estados vazios, mensagens apropriadas são exibidas.
+
+Testes foram criados para validar:
+- Redirecionamento de guests
+- Exibicao correta de saldos, receitas e despesas
+- Contagem de contas, categorias e lancamentos (excluindo cancelados)
+- Isolamento de dados entre usuarios
+- Estados vazios

@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: filtros iniciais da listagem de lancamentos financeiros.
+Etapa atual: dashboard com dados reais do dominio financeiro.
 
 ## Ja Implementado
 
@@ -109,16 +109,21 @@ Etapa atual: filtros iniciais da listagem de lancamentos financeiros.
 - Cancelamento de lancamentos sem exclusao fisica do historico
 - Reversao de saldo ao cancelar lancamentos pagos
 - Filtros de lancamentos por periodo, tipo, conta, categoria e status
+- Filtro dinamico de categorias no formulario conforme tipo escolhido (JavaScript)
+- Dashboard com dados reais:
+  - Saldo total das contas ativas
+  - Receitas e despesas do mes
+  - Contadores de contas, categorias e lancamentos
+  - Resumo semanal dos ultimos 7 dias
+  - Despesas por categoria com barras de progresso
 - Build frontend com Vite e Tailwind CSS
-- Testes automatizados iniciais passando
+- 74 testes automatizados passando (235 assercoes)
 
 ## Proximas Etapas
 
-1. Melhorar selecao de categorias no formulario conforme o tipo escolhido.
-2. Evoluir dashboard com dados reais do dominio financeiro.
-3. Avaliar extrato de saldo e auditoria de alteracoes financeiras.
-4. Definir se lancamentos cancelados poderao ser reabertos em etapa futura.
-5. Preparar a primeira camada da API REST com autenticacao adequada.
+1. Avaliar extrato de saldo e auditoria de alteracoes financeiras.
+2. Definir se lancamentos cancelados poderao ser reabertos em etapa futura.
+3. Preparar a primeira camada da API REST com autenticacao adequada.
 
 ## Licenca
 

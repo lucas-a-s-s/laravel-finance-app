@@ -40,13 +40,13 @@
     <div>
         <x-input-label for="category_id" :value="__('Categoria')" />
         <select id="category_id" name="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
-            <option value="">Selecione uma categoria do mesmo tipo</option>
+            <option value="">Selecione uma categoria</option>
 
             @foreach ($transactionTypes as $typeValue => $typeLabel)
-                <optgroup label="{{ $typeLabel }}">
+                <optgroup label="{{ $typeLabel }}" data-type="{{ $typeValue }}">
                     @foreach ($categories as $category)
                         @if ($category->type->value === $typeValue)
-                            <option value="{{ $category->id }}" @selected((string) old('category_id', $transaction?->category_id) === (string) $category->id)>
+                            <option value="{{ $category->id }}" data-type="{{ $typeValue }}" @selected((string) old('category_id', $transaction?->category_id) === (string) $category->id)>
                                 {{ $category->name }}
                             </option>
                         @endif
@@ -84,6 +84,59 @@
         <x-input-error class="mt-2" :messages="$errors->get('is_paid')" />
     </div>
 </div>
+
+<script>
+(function() {
+    const typeSelect = document.getElementById('type');
+    const categorySelect = document.getElementById('category_id');
+
+    function filterCategoriesByType() {
+        const selectedType = typeSelect.value;
+        const selectedOption = categorySelect.selectedOptions[0];
+        const currentCategoryType = selectedOption ? selectedOption.dataset.type : null;
+
+        // Se a categoria selecionada não for compatível com o tipo, limpa a seleção
+        if (selectedOption && selectedOption.value && currentCategoryType !== selectedType) {
+            categorySelect.value = '';
+        }
+
+        // Mostra/esconde optgroups e options baseado no tipo selecionado
+        Array.from(categorySelect.options).forEach(option => {
+            if (option.value === '') {
+                // Sempre mostra a opção placeholder
+                option.style.display = '';
+                option.disabled = false;
+                return;
+            }
+
+            const optionType = option.dataset.type;
+            if (optionType === selectedType) {
+                option.style.display = '';
+                option.disabled = false;
+            } else {
+                option.style.display = 'none';
+                option.disabled = true;
+            }
+        });
+
+        // Mostra/esconde optgroups
+        Array.from(categorySelect.querySelectorAll('optgroup')).forEach(optgroup => {
+            const optgroupType = optgroup.dataset.type;
+            if (optgroupType === selectedType) {
+                optgroup.style.display = '';
+            } else {
+                optgroup.style.display = 'none';
+            }
+        });
+    }
+
+    // Filtra ao mudar o tipo
+    typeSelect.addEventListener('change', filterCategoriesByType);
+
+    // Aplica filtro ao carregar a página (para edição ou novo cadastro)
+    document.addEventListener('DOMContentLoaded', filterCategoriesByType);
+})();
+</script>
 
 <div class="mt-8 flex items-center justify-end gap-3">
     <a href="{{ route('financial-transactions.index') }}" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
