@@ -149,3 +149,25 @@ A regra foi integrada em `AdjustAccountBalanceForTransaction`, que ja era o pont
 Lancamentos pendentes nao geram movimentos de saldo, pois ainda nao afetam o saldo atual. Lancamentos pagos geram movimento de aplicacao. Edicoes de lancamentos pagos podem gerar uma reversao do estado anterior e uma nova aplicacao. Cancelamentos geram uma reversao apenas uma vez, preservando a idempotencia ja existente.
 
 Essa etapa ainda nao cria uma tela propria de auditoria. A decisao foi primeiro garantir consistencia dos dados e cobertura automatizada. A proxima evolucao pode expor esses movimentos no extrato da conta ou em uma tela tecnica separada.
+
+## 18. Auditoria visivel no extrato
+
+O extrato da conta passou a exibir os ultimos movimentos de auditoria de saldo, usando os registros de `AccountBalanceMovement`. Essa escolha torna visivel para o usuario tecnico como o saldo foi alterado: saldo anterior, impacto assinado e saldo posterior.
+
+A listagem de auditoria fica no mesmo `AccountStatementController`, pois ainda e uma leitura contextual da conta. Os filtros de periodo do extrato tambem sao aplicados aos movimentos de auditoria por meio do relacionamento com `FinancialTransaction`, mantendo a leitura alinhada ao recorte financeiro selecionado.
+
+Como a auditoria pode crescer bastante em volume, a primeira versao exibe apenas os 10 movimentos mais recentes. Uma etapa futura pode criar uma tela dedicada com paginacao propria, filtros por operacao e exportacao.
+
+## 19. API REST v1 inicial
+
+Foi iniciada a camada REST em `routes/api.php` com prefixo `/api/v1` e autenticacao via `auth:sanctum`. A primeira versao expoe endpoints somente de leitura:
+
+- `GET /api/v1/dashboard`
+- `GET /api/v1/accounts`
+- `GET /api/v1/financial-transactions`
+
+O resumo financeiro do dashboard foi extraido para `DashboardSummaryService`, permitindo que a tela Blade e a API usem a mesma regra de calculo. Essa decisao reduz divergencia entre interface web e API.
+
+As respostas JSON usam Resources em `app/Http/Resources/Api/V1`, mantendo um contrato claro para contas, categorias e lancamentos. A listagem de lancamentos reutiliza `FilterFinancialTransactionsRequest`, preservando validacao de periodo, tipo, status, conta e categoria, incluindo a protecao contra IDs de outro usuario.
+
+Nesta etapa, a API e intencionalmente somente leitura. Os proximos endpoints devem cobrir categorias e, depois, criacao, edicao e cancelamento de lancamentos financeiros reaproveitando as Actions de dominio ja existentes.

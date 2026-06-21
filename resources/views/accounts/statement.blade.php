@@ -139,6 +139,75 @@
                     </div>
                 @endif
             </section>
+
+            <section class="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-200">
+                <div class="border-b border-gray-200 px-6 py-4">
+                    <h3 class="text-base font-semibold text-gray-900">Auditoria de saldo</h3>
+                    <p class="mt-1 text-sm text-gray-500">Ultimos movimentos que alteraram o saldo desta conta.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-500">Data</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-500">Operacao</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-500">Lancamento</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold uppercase text-gray-500">Antes</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold uppercase text-gray-500">Impacto</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold uppercase text-gray-500">Depois</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            @forelse ($balanceMovements as $movement)
+                                <tr>
+                                    <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                                        {{ $movement->created_at->format('d/m/Y H:i') }}
+                                    </td>
+                                    <td class="whitespace-nowrap px-6 py-4 text-sm">
+                                        <span @class([
+                                            'rounded-md px-2 py-1 text-xs font-semibold',
+                                            'bg-emerald-50 text-emerald-700' => $movement->operation->value === 'applied',
+                                            'bg-amber-50 text-amber-700' => $movement->operation->value === 'reversed',
+                                        ])>
+                                            {{ $movement->operation->value === 'applied' ? 'Aplicacao' : 'Reversao' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">
+                                        <p class="font-medium text-gray-900">
+                                            {{ $movement->financialTransaction->description ?: 'Sem descricao' }}
+                                        </p>
+                                        <p class="mt-1 text-xs text-gray-500">
+                                            {{ $movement->financialTransaction->category->name }}
+                                        </p>
+                                    </td>
+                                    <td class="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-600">
+                                        R$ {{ number_format((float) $movement->balance_before, 2, ',', '.') }}
+                                    </td>
+                                    <td @class([
+                                        'whitespace-nowrap px-6 py-4 text-right text-sm font-semibold',
+                                        'text-emerald-700' => (float) $movement->impact_amount >= 0,
+                                        'text-rose-700' => (float) $movement->impact_amount < 0,
+                                    ])>
+                                        {{ (float) $movement->impact_amount >= 0 ? '+' : '-' }}
+                                        R$ {{ number_format(abs((float) $movement->impact_amount), 2, ',', '.') }}
+                                    </td>
+                                    <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-semibold text-gray-900">
+                                        R$ {{ number_format((float) $movement->balance_after, 2, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-10 text-center text-sm text-gray-500">
+                                        Nenhum movimento de auditoria encontrado para esta conta.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
     </div>
 </x-app-layout>

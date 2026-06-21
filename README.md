@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: auditoria inicial de movimentos de saldo.
+Etapa atual: API REST v1 inicial com resumo, contas e lancamentos.
 
 ## Ja Implementado
 
@@ -121,20 +121,27 @@ Etapa atual: auditoria inicial de movimentos de saldo.
   - Filtro por periodo
   - Totais de entradas, saidas e resultado filtrado
   - Isolamento por usuario autenticado
+  - Ultimos movimentos de auditoria de saldo
 - Auditoria inicial de saldo com:
   - Model `AccountBalanceMovement`
   - Registro de aplicacao e reversao de saldo
   - Saldo antes e depois de cada movimento
   - Impacto positivo ou negativo no saldo da conta
   - Integracao com criacao, edicao e cancelamento de lancamentos pagos
+- API REST v1 inicial com Sanctum:
+  - `GET /api/v1/dashboard`
+  - `GET /api/v1/accounts`
+  - `GET /api/v1/financial-transactions`
+  - Resources JSON para contas, categorias e lancamentos
+  - Filtros de lancamentos reaproveitando validacao existente
 - Build frontend com Vite e Tailwind CSS
-- 83 testes automatizados passando (291 assercoes)
+- 93 testes automatizados passando (341 assercoes)
 
 ## Proximas Etapas
 
-1. Exibir movimentos de auditoria em uma tela tecnica ou no extrato da conta.
-2. Definir se lancamentos cancelados poderao ser reabertos em etapa futura.
-3. Preparar a primeira camada da API REST com autenticacao adequada.
+1. Criar endpoints API de criacao, edicao e cancelamento de lancamentos.
+2. Criar endpoint API para categorias.
+3. Definir se lancamentos cancelados poderao ser reabertos em etapa futura.
 
 ## Licenca
 

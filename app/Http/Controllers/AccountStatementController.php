@@ -41,9 +41,27 @@ class AccountStatementController extends Controller
             ->paginate(15)
             ->withQueryString();
 
+        $balanceMovements = $account->balanceMovements()
+            ->with(['financialTransaction.category'])
+            ->where('user_id', $request->user()->id)
+            ->when($filters['date_from'] ?? null, function ($query, string $dateFrom): void {
+                $query->whereHas('financialTransaction', function ($transactionQuery) use ($dateFrom): void {
+                    $transactionQuery->whereDate('transaction_date', '>=', $dateFrom);
+                });
+            })
+            ->when($filters['date_to'] ?? null, function ($query, string $dateTo): void {
+                $query->whereHas('financialTransaction', function ($transactionQuery) use ($dateTo): void {
+                    $transactionQuery->whereDate('transaction_date', '<=', $dateTo);
+                });
+            })
+            ->latest('id')
+            ->limit(10)
+            ->get();
+
         return view('accounts.statement', [
             'account' => $account,
             'transactions' => $transactions,
+            'balanceMovements' => $balanceMovements,
             'filters' => $filters,
             'incomeTotal' => $incomeTotal,
             'expenseTotal' => $expenseTotal,
