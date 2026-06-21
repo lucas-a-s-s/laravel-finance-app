@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AccountIndexController;
+use App\Http\Controllers\Api\V1\CategoryIndexController;
 use App\Http\Controllers\Api\V1\DashboardSummaryController;
 use App\Http\Controllers\Api\V1\FinancialTransactionIndexController;
 use Illuminate\Http\Request;
@@ -27,5 +28,6 @@ Route::middleware('auth:sanctum')
     ->group(function (): void {
         Route::get('/dashboard', DashboardSummaryController::class)->name('dashboard');
         Route::get('/accounts', AccountIndexController::class)->name('accounts.index');
+        Route::get('/categories', CategoryIndexController::class)->name('categories.index');
         Route::get('/financial-transactions', FinancialTransactionIndexController::class)->name('financial-transactions.index');
     });

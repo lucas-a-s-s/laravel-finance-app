@@ -164,6 +164,7 @@ Foi iniciada a camada REST em `routes/api.php` com prefixo `/api/v1` e autentica
 
 - `GET /api/v1/dashboard`
 - `GET /api/v1/accounts`
+- `GET /api/v1/categories`
 - `GET /api/v1/financial-transactions`
 
 O resumo financeiro do dashboard foi extraido para `DashboardSummaryService`, permitindo que a tela Blade e a API usem a mesma regra de calculo. Essa decisao reduz divergencia entre interface web e API.
@@ -171,3 +172,13 @@ O resumo financeiro do dashboard foi extraido para `DashboardSummaryService`, pe
 As respostas JSON usam Resources em `app/Http/Resources/Api/V1`, mantendo um contrato claro para contas, categorias e lancamentos. A listagem de lancamentos reutiliza `FilterFinancialTransactionsRequest`, preservando validacao de periodo, tipo, status, conta e categoria, incluindo a protecao contra IDs de outro usuario.
 
 Nesta etapa, a API e intencionalmente somente leitura. Os proximos endpoints devem cobrir categorias e, depois, criacao, edicao e cancelamento de lancamentos financeiros reaproveitando as Actions de dominio ja existentes.
+
+## 20. Endpoint API de categorias
+
+Foi criado o endpoint `GET /api/v1/categories` para expor as categorias do usuario autenticado na API REST v1. A resposta usa `CategoryResource`, mantendo o contrato JSON desacoplado da estrutura interna do model.
+
+Os filtros ficam em `FilterCategoriesRequest`, com suporte a `type`, `is_active` e `per_page`. Essa validacao dedicada segue o padrao ja usado no restante do projeto: controllers coordenam o fluxo, requests validam entrada e resources formatam saida.
+
+O endpoint sempre consulta categorias pelo usuario autenticado, evitando acesso cruzado entre usuarios. Os resultados sao ordenados com categorias ativas primeiro, depois por tipo e nome, facilitando consumo por interfaces futuras.
+
+Com esse passo, a API de leitura cobre dashboard, contas, categorias e lancamentos. A proxima evolucao deve iniciar escrita via API, reaproveitando as Actions e Form Requests existentes para manter consistencia de saldo, auditoria e seguranca.

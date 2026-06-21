@@ -75,7 +75,7 @@ http://127.0.0.1:8000
 
 ## Status
 
-Etapa atual: API REST v1 inicial com resumo, contas e lancamentos.
+Etapa atual: API REST v1 inicial com resumo, contas, categorias e lancamentos.
 
 ## Ja Implementado
 
@@ -131,16 +131,18 @@ Etapa atual: API REST v1 inicial com resumo, contas e lancamentos.
 - API REST v1 inicial com Sanctum:
   - `GET /api/v1/dashboard`
   - `GET /api/v1/accounts`
+  - `GET /api/v1/categories`
   - `GET /api/v1/financial-transactions`
   - Resources JSON para contas, categorias e lancamentos
+  - Filtros de categorias por tipo e status ativo
   - Filtros de lancamentos reaproveitando validacao existente
 - Build frontend com Vite e Tailwind CSS
-- 93 testes automatizados passando (341 assercoes)
+- 97 testes automatizados passando (360 assercoes)
 
 ## Proximas Etapas
 
 1. Criar endpoints API de criacao, edicao e cancelamento de lancamentos.
-2. Criar endpoint API para categorias.
+2. Criar endpoints API de criacao e edicao de categorias.
 3. Definir se lancamentos cancelados poderao ser reabertos em etapa futura.
 
 ## Licenca
